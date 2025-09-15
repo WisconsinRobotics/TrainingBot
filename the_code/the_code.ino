@@ -116,7 +116,7 @@ void GamepadMapping() {
     int axisRY = myGamepad->axisRY();
     if (axisY < -20) {
       // Forward
-      int dutyCycleA = map(axisY, -20, leftAxisYLow, 170, 255);
+      int dutyCycleA = map(axisY, leftAxisYLow, -20, 170, 255);
       digitalWrite(motorAPin1, HIGH);
       digitalWrite(motorAPin2, LOW);
       ledcWrite(pwmChannelA, dutyCycleA);
@@ -129,15 +129,13 @@ void GamepadMapping() {
       ledcWrite(pwmChannelA, dutyCycleA);
     } 
     if (axisRY > 20) {
-      // Reverse
       int dutyCycleB = map(axisRY, 20, rightAxisYHigh, 170, 255);
       digitalWrite(motorBPin1, LOW);
       digitalWrite(motorBPin2, HIGH);
       ledcWrite(pwmChannelB, dutyCycleB);
     } 
     else if (axisRY < -20) {
-      // Reverse
-      int dutyCycleB = map(axisRY, -20, rightAxisYLow, 170, 255);
+      int dutyCycleB = map(axisRY, rightAxisYLow, -20, 170, 255);
       digitalWrite(motorBPin1, HIGH);
       digitalWrite(motorBPin2, LOW);
       ledcWrite(pwmChannelB, dutyCycleB);
