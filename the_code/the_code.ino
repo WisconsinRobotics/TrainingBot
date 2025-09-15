@@ -7,6 +7,12 @@ const int motorAPin1 = 27;
 const int motorAPin2 = 26;
 const int enableAPin = 14;
 
+const int motorBPin1 = 25;
+const int motorBPin2 = 33;
+const int enableBPin = 32;
+
+
+
 //Values for left joystick min, max, and idle values for mapping change based on controller or maybe run setup sequence idk
 const int leftAxisXLow = -512;
 const int leftAxisXHigh = 512;
@@ -24,7 +30,8 @@ const int rightAxisXIdle = 0;
 const int rightAxisYIdle = 0;
 
 const int freq= 30000;
-const int pwmChannel = 0;
+const int pwmChannelA = 0;
+const int pwmChannelB = 1;
 const int resolution = 8;
 
 // This callback gets called any time a new gamepad is connected.
@@ -106,26 +113,43 @@ void GamepadMapping() {
 
   if (myGamepad && myGamepad->isConnected()) {
     int axisY = myGamepad->axisY();
-
+    int axisRY = myGamepad->axisRY();
     if (axisY < -20) {
       // Forward
       int dutyCycleA = map(axisY, -20, leftAxisYLow, 170, 255);
       digitalWrite(motorAPin1, HIGH);
       digitalWrite(motorAPin2, LOW);
-      ledcWrite(pwmChannel, dutyCycleA);
+      ledcWrite(pwmChannelA, dutyCycleA);
     } 
     else if (axisY > 20) {
       // Reverse
       int dutyCycleA = map(axisY, 20, leftAxisYHigh, 170, 255);
       digitalWrite(motorAPin1, LOW);
       digitalWrite(motorAPin2, HIGH);
-      ledcWrite(pwmChannel, dutyCycleA);
+      ledcWrite(pwmChannelA, dutyCycleA);
     } 
+    else if (axisRY > 20) {
+      // Reverse
+      int dutyCycleB = map(axisRY, 20, rightAxisYHigh, 170, 255);
+      digitalWrite(motorBPin1, LOW);
+      digitalWrite(motorBPin2, HIGH);
+      ledcWrite(pwmChannelB, dutyCycleB);
+    } 
+    else if (axisRY < -20) {
+      // Reverse
+      int dutyCycleB = map(axisRY, -20, rightAxisYLow, 170, 255);
+      digitalWrite(motorBPin1, HIGH);
+      digitalWrite(motorBPin2, LOW);
+      ledcWrite(pwmChannelB, dutyCycleB);
+    }
     else {
       // Stop motor
       digitalWrite(motorAPin1, LOW);
       digitalWrite(motorAPin2, LOW);
-      ledcWrite(pwmChannel, 0);
+      digitalWrite(motorBPin1, LOW);
+      digitalWrite(motorBPin2, LOW);
+      ledcWrite(pwmChannelA, 0);
+      ledcWrite(pwmChannelB, 0);
     }
   }
 }
@@ -145,9 +169,17 @@ void setup() {
   pinMode(motorAPin2, OUTPUT);
   pinMode(enableAPin, OUTPUT);
 
-  ledcSetup(pwmChannel, freq, resolution);
-  ledcAttachPin(enableAPin, pwmChannel);
-  ledcWrite(pwmChannel, 0);
+  pinMode(motorBPin1, OUTPUT);
+  pinMode(motorBPin2, OUTPUT);
+  pinMode(enableBPin, OUTPUT);
+
+  ledcSetup(pwmChannelA, freq, resolution);
+  ledcAttachPin(enableAPin, pwmChannelA);
+  ledcWrite(pwmChannelA, 0);
+
+  ledcSetup(pwmChannelB, freq, resolution);
+  ledcAttachPin(enableBPin, pwmChannelB);
+  ledcWrite(pwmChannelB, 0);
 
   BP32.forgetBluetoothKeys();
 }
