@@ -2,32 +2,7 @@
 
   const uint8_t maxGamepads = 1;
   GamepadPtr myGamepads[maxGamepads];
-
-  const int motorAPin1 = 27;
-  const int motorAPin2 = 26;
-  const int enableAPin = 14;
-
-  const int motorBPin1 = 32;
-  const int motorBPin2 = 33;
-  const int enableBPin = 25;
-
-
-
-  //Values for left joystick min, max, and idle values for mapping change based on controller or maybe run setup sequence idk
-  const int leftAxisXLow = -512;
-  const int leftAxisXHigh = 512;
-  const int leftAxisYLow = -512;
-  const int leftAxisYHigh = 512;
-  //const int leftAxisXIdle = 0;
-  //const int leftAxisYIdle = 0;
-
-  //Values for right joystick idle values mapping change based on controller or maybe run setup sequence idk
-  const int rightAxisXLow = -512;
-  const int rightAxisXHigh = 512;
-  const int rightAxisYLow = -512;
-  const int rightAxisYHigh = 512;
-  const int rightAxisXIdle = 0;
-  const int rightAxisYIdle = 0;
+  //declare which pins you are using 
 
   const int freq= 2000;
   const int pwmChannelA = 0;
@@ -110,56 +85,7 @@
   //maps Gamepad Values to Motor Output
   void GamepadMapping() {
     GamepadPtr myGamepad = myGamepads[0];  // Since maxGamepads = 1
-
-    if (myGamepad && myGamepad->isConnected()) {
-      int axisY = myGamepad->axisY();
-      int axisRY = myGamepad->axisRY();
-      if (axisY < -60) {
-        // Forward
-        int dutyCycleA = map(axisY, leftAxisYLow, -60, 170, 255);
-        dutyCycleA = constrain(dutyCycleA, 0, 255);
-        digitalWrite(motorAPin1, HIGH);
-        digitalWrite(motorAPin2, LOW);
-        ledcWrite(pwmChannelA, dutyCycleA);
-        //Serial.println("UP Left");
-      } 
-      else if (axisY > 60) {
-        // Reverse
-        int dutyCycleA = map(axisY, 60, leftAxisYHigh, 170, 255);
-        dutyCycleA = constrain(dutyCycleA, 0, 255);
-        digitalWrite(motorAPin1, LOW);
-        digitalWrite(motorAPin2, HIGH);
-        ledcWrite(pwmChannelA, dutyCycleA);
-        //Serial.println("DOWN Left");
-      }
-      else{
-        digitalWrite(motorAPin1, LOW);
-        digitalWrite(motorAPin2, LOW);
-        ledcWrite(pwmChannelA, 0);
-      } 
-      if (axisRY > 60) {
-        int dutyCycleB = map(axisRY, 60, rightAxisYHigh, 170, 255);
-        dutyCycleB = constrain(dutyCycleB, 0, 255);
-        digitalWrite(motorBPin1, LOW);
-        digitalWrite(motorBPin2, HIGH);
-        ledcWrite(pwmChannelB, dutyCycleB);
-        //Serial.println("DOWN Right");
-      } 
-      else if (axisRY < -60) {
-        int dutyCycleB = map(axisRY, rightAxisYLow, -60, 170, 255);
-        dutyCycleB = constrain(dutyCycleB, 0, 255);
-        digitalWrite(motorBPin1, HIGH);
-        digitalWrite(motorBPin2, LOW);
-        ledcWrite(pwmChannelB, dutyCycleB);
-        //Serial.println("UP Right");
-      }
-      else {
-        // Stop motor
-        digitalWrite(motorBPin1, LOW);
-        digitalWrite(motorBPin2, LOW);
-        ledcWrite(pwmChannelB, 0);
-      }
-    }
+  //write gamepad mapping logic here with if statements
   }
   void setup() {
     // put your setup code here, to run once:
@@ -172,22 +98,7 @@
 
     // Setup the Bluepad32 callbacks
     BP32.setup(&onConnectedGamepad, &onDisconnectedGamepad);
-
-    pinMode(motorAPin1, OUTPUT);
-    pinMode(motorAPin2, OUTPUT);
-    pinMode(enableAPin, OUTPUT);
-
-    pinMode(motorBPin1, OUTPUT);
-    pinMode(motorBPin2, OUTPUT);
-    pinMode(enableBPin, OUTPUT);
-
-    ledcSetup(pwmChannelA, freq, resolution);
-    ledcAttachPin(enableAPin, pwmChannelA);
-    ledcWrite(pwmChannelA, 0);
-
-    ledcSetup(pwmChannelB, freq, resolution);
-    ledcAttachPin(enableBPin, pwmChannelB);
-    ledcWrite(pwmChannelB, 0);
+    //Write pin outputs here
 
     BP32.forgetBluetoothKeys();
   }
