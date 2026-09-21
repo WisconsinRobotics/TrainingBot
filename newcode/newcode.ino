@@ -1,22 +1,12 @@
 #include <WiFi.h>
 #include <WebServer.h>
 
-// WiFi AP Credentials
+// WiFi AP Credentials, please change
 const char* ap_ssid     = "ESP32-Controller";
 const char* ap_password = "control123";
 
-// Motor Driver Pins (L298N)
-const int motorLeftPin1   = 35;
-const int motorLeftPin2   = 36;
-const int motorLeftEnable = 7;
-
-const int motorRightPin1   = 37;
-const int motorRightPin2   = 38;
-const int motorRightEnable = 6;
-
-const int pwmFreq       = 2000;
-const int pwmResolution = 8; // 0-255 range
-
+//DONT CHANGE ANYTHING IN THIS HEADER
+//START OF HEADER
 WebServer server(80);
 
 // Global Joystick values (-100 to 100) accessible anywhere in your code
@@ -169,6 +159,21 @@ setInterval(() => {
 </body>
 </html>
 )rawliteral";
+
+//END OF HEADER
+
+
+// Motor Driver Pins (L298N)
+const int motorLeftPin1   = 37;
+const int motorLeftPin2   = 38;
+const int motorLeftEnable = 6;
+
+const int motorRightPin1   = 35;
+const int motorRightPin2   = 36;
+const int motorRightEnable = 7;
+
+const int pwmFreq       = 2000;
+const int pwmResolution = 8; // 0-255 range
 
 // Hardware-level motor execution helper
 void driveMotor(int pin1, int pin2, int enablePin, int speedValue) {
